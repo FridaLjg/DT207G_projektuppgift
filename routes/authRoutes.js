@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
 require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const Admin = require("../models/Admin");
 
 //Anslut till MongoDB
 mongoose.set("strictQuery", false);
@@ -22,13 +24,13 @@ router.post("/login", async (req, res) => {
         }
 
         //Finns användaren?
-        const user = await User.findOne({ username });
-        if (!user) {
+        const admin = await Admin.findOne({ username });
+        if (!admin) {
             return res.status(401).json({ error: "Felaktigt användarnamn/lösenord!" });
         }
 
         //Kontrollera lösenordet
-        const isPasswordMatch = await user.comparePassword(password);
+        const isPasswordMatch = await admin.comparePassword(password);
         if (!isPasswordMatch) {
             return res.status(401).json({
                 error: "Felaktigt användarnamn/lösenord!"

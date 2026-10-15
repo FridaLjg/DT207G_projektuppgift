@@ -10,6 +10,9 @@ const port = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(cors());
 
+//Routes
+app.use("/api", authRoutes);
+
 //Starta applikation
 app.listen(port, () => {
     console.log(`Servern har startat på http://localhost:${port}`);

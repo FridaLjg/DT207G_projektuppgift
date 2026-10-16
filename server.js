@@ -73,6 +73,44 @@ app.post("/api/products", authenticateToken, async (req, res) => {
     }
 });
 
+//Uppdatera produkt
+app.put("/api/products/:id", authenticateToken, async (req, res) => {
+    try {
+
+        const { name, description, price } = req.body;
+
+        const product = await Product.findByIdAndUpdate(
+            req.params.id,
+            {
+                name,
+                description,
+                price
+            },
+            {
+                new: true
+            }
+        );
+
+        if (!product) {
+            return res.status(404).json({
+                message: "Produkten hittades inte"
+            });
+        }
+
+        res.status(200).json({
+            message: "Produkten är uppdaterad!",
+            product
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Serverfel"
+        });
+    }
+});
+
 //Hämta produkter
 app.get("/api/products", async (req, res) => {
     try {
@@ -89,6 +127,8 @@ app.get("/api/products", async (req, res) => {
         });
     }
 });
+
+
 
 //Validera Token
 function authenticateToken(req, res, next) {

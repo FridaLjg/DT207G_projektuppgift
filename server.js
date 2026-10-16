@@ -53,7 +53,7 @@ app.post("/api/products", authenticateToken, async (req, res) => {
         }
 
         const product = new Product({
-            name: productName,
+            productName,
             description,
             price
         });
@@ -82,7 +82,7 @@ app.put("/api/products/:id", authenticateToken, async (req, res) => {
         const product = await Product.findByIdAndUpdate(
             req.params.id,
             {
-                name,
+                productName,
                 description,
                 price
             },

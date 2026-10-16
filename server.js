@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 require("dotenv").config();
 const Admin = require("./models/Admin");
+const Product = require("./models/Products");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -14,7 +15,7 @@ app.use(cors());
 //Routes
 app.use("/api", authRoutes);
 
-//Skyddad routes
+//Skyddade routes
 app.get("/api/protected", authenticateToken, async (req, res) => {
 
     try {
@@ -36,6 +37,38 @@ app.get("/api/protected", authenticateToken, async (req, res) => {
         console.error(error);
         res.status(500).json({
             message: "Server fel"
+        });
+    }
+});
+
+app.post("/api/products", authenticateToken, async (req, res) => {
+    try {
+
+        const { name, description, price } = req.body;
+
+        if (!name || !description || !price) {
+            return res.status(400).json({
+                error: "Alla fält måste fyllas i!"
+            });
+        }
+
+        const product = new Product({
+            name,
+            description,
+            price
+        });
+
+        await product.save();
+
+        res.status(201).json({
+            message: "Produkten har lagts till!"
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Serverfel"
         });
     }
 });

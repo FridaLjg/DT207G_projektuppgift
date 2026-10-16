@@ -111,6 +111,31 @@ app.put("/api/products/:id", authenticateToken, async (req, res) => {
     }
 });
 
+//Ta bort produkt
+app.delete("/api/products/:id", authenticateToken, async (req, res) => {
+    try {
+
+        const product = await Product.findByIdAndDelete(req.params.id);
+
+        if (!product) {
+            return res.status(404).json({
+                message: "Produkten hittades inte"
+            });
+        }
+
+        res.status(200).json({
+            message: "Produkten har tagits bort!"
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            error: "Serverfel"
+        });
+    }
+});
+
 //Hämta produkter
 app.get("/api/products", async (req, res) => {
     try {
@@ -127,7 +152,6 @@ app.get("/api/products", async (req, res) => {
         });
     }
 });
-
 
 
 //Validera Token

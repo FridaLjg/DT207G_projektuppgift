@@ -44,16 +44,16 @@ app.get("/api/protected", authenticateToken, async (req, res) => {
 app.post("/api/products", authenticateToken, async (req, res) => {
     try {
 
-        const { name, description, price } = req.body;
+        const { productName, description, price } = req.body;
 
-        if (!name || !description || !price) {
+        if (!productName || !description || !price) {
             return res.status(400).json({
                 error: "Alla fält måste fyllas i!"
             });
         }
 
         const product = new Product({
-            name,
+            name: productName,
             description,
             price
         });
@@ -77,7 +77,7 @@ app.post("/api/products", authenticateToken, async (req, res) => {
 app.put("/api/products/:id", authenticateToken, async (req, res) => {
     try {
 
-        const { name, description, price } = req.body;
+        const { productName, description, price } = req.body;
 
         const product = await Product.findByIdAndUpdate(
             req.params.id,
